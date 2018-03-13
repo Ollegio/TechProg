@@ -128,11 +128,6 @@ namespace Lab1
             currentAbility.This(this, target);
         }
 
-        public void CastAbility(string ability)
-        {
-
-        }
-
         public void Die()
         {
 
