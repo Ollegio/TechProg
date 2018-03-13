@@ -11,7 +11,7 @@ namespace Builder
         public static void Main()
         {
             // Create director and builders
-            Director director = new Director();
+            BasicUnitConstructor director = new BasicUnitConstructor();
 
             Builder b1 = new FootmanBuilder();
             Builder b2 = new MageBuilder();
@@ -31,7 +31,7 @@ namespace Builder
     }
 
     // "Director"
-    class Director
+    class BasicUnitConstructor
     {
         // Builder uses a complex series of steps
         public void Construct(Builder builder)
