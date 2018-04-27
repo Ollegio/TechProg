@@ -46,6 +46,8 @@ namespace Builder
     // "Builder"
     abstract class Builder
     {
+        protected readonly Unit _unit = new Unit();
+
         public virtual void InitUnitType() { }
         public virtual void InitCharacteristics() { }
         public virtual void InitAttack() { }
@@ -56,16 +58,14 @@ namespace Builder
     // "ConcreteBuilder1"
     class FootmanBuilder : Builder
     {
-        private readonly Unit unit = new Unit();
-
         public override void InitUnitType()
         {
-            unit.Name = "footman";
+            _unit.Name = "footman";
         }
 
         public override void InitCharacteristics()
         {
-            unit.InitCharacteristics(
+            _unit.InitCharacteristics(
                 health: 400,
                 mana: 0,
                 armor: 5,
@@ -75,18 +75,18 @@ namespace Builder
 
         public override void InitAttack()
         {
-            unit.AddAbility("attack");
-            unit.Damage = 15;
+            _unit.AddAbility("attack");
+            _unit.Damage = 15;
         }
 
         public override void InitAbilities()
         {
-            unit.AddAbility("shield bash");
+            _unit.AddAbility("shield bash");
         }
 
         public override Unit GetUnit()
         {
-            return unit;
+            return _unit;
         }
        
     }
@@ -94,16 +94,14 @@ namespace Builder
     // "ConcreteBuilder2"
     class MageBuilder : Builder
     {
-        private readonly Unit unit = new Unit();
-
         public override void InitUnitType()
         {
-            unit.Name = "mage";
+            _unit.Name = "mage";
         }
 
         public override void InitCharacteristics()
         {
-            unit.InitCharacteristics(
+            _unit.InitCharacteristics(
                 health: 200,
                 mana: 200,
                 armor: 2,
@@ -113,19 +111,19 @@ namespace Builder
 
         public override void InitAttack()
         {
-            unit.AddAbility("attack");
-            unit.Damage = 10;
+            _unit.AddAbility("attack");
+            _unit.Damage = 10;
         }
 
         public override void InitAbilities()
         {
-            unit.AddAbility("fireball");
-            unit.AddAbility("firestorm");
+            _unit.AddAbility("fireball");
+            _unit.AddAbility("firestorm");
         }
 
         public override Unit GetUnit()
         {
-            return unit;
+            return _unit;
         }
 
     }
@@ -133,25 +131,17 @@ namespace Builder
     // "Product"
     class Unit
     {
-        private readonly List<string> abilities = new List<string>();
-        private int maxHealth,
-            maxMana,
-            damage,
-            armor,
-            cost,
-            food;
-        private int currentHealth, currentMana;
-        private string name;
+        private readonly List<string> _abilities = new List<string>();
 
-        public int MaxHealth { get => maxHealth; set => maxHealth = value; }
-        public int MaxMana { get => maxMana; set => maxMana = value; }
-        public int Damage { get => damage; set => damage = value; }
-        public int Armor { get => armor; set => armor = value; }
-        public int Cost { get => cost; set => cost = value; }
-        public int Food { get => food; set => food = value; }
-        public string Name { get => name; set => name = value; }
-        public int Health { get => currentHealth; set => currentHealth = value; }
-        public int Mana { get => currentMana; set => currentMana = value; }
+        public int MaxHealth { get; private set; }
+        public int MaxMana { get; private set; }
+        public int Damage { get; set; }
+        public int Armor { get; set; }
+        public int Cost { get; set; }
+        public int Food { get; set; }
+        public string Name { get; set; }
+        public int Health { get; set; }
+        public int Mana { get; set; }
 
         public void InitCharacteristics(int health, int mana, int armor, int cost, int food)
         {
@@ -166,16 +156,16 @@ namespace Builder
 
         public void AddAbility(string ability)
         {
-            abilities.Add(ability);
+            _abilities.Add(ability);
         }
 
         public void Show()
         {
-            Console.WriteLine("\nUnit type: " + name);
+            Console.WriteLine("\nUnit type: " + Name);
             Console.WriteLine("Health: {0}/{1}", Health, MaxHealth);
             Console.WriteLine("Mana: {0}/{1}", Mana, MaxMana);
             Console.WriteLine("Abilities:");
-            foreach (string ability in abilities)
+            foreach (string ability in _abilities)
                 Console.WriteLine(ability);
         }
 

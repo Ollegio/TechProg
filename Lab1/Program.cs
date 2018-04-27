@@ -128,9 +128,11 @@ namespace Lab1
             currentAbility.This(this, target);
         }
 
-        public void Die()
-        {
+        public void Die() { }
 
+        public override string ToString()
+        {
+            return $"{Name}: {Max}/{Health}| Abilities:";
         }
     }
 

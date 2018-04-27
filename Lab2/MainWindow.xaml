@@ -9,10 +9,17 @@
     <Grid>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Width="517" Height="319" VerticalAlignment="Top">
             <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <ListBox Name="ListBoxUnits" HorizontalAlignment="Left" Height="271" Margin="10,10,0,0" VerticalAlignment="Top" Width="365" SelectionChanged="ListBoxUnits_OnSelectionChanged"/>
+                    <Button x:Name="Add" Content="Add" HorizontalAlignment="Left" Height="31" Margin="380,10,0,0" VerticalAlignment="Top" Width="121" Click="Add_Click" />
+                    <Button x:Name="Delete" IsEnabled="False" Content="Delete" HorizontalAlignment="Left" Height="31" Margin="380,46,0,0" VerticalAlignment="Top" Width="121" Click="Delete_Click"/>
+                    <Button x:Name="Edit" IsEnabled="False" Content="Edit" HorizontalAlignment="Left" Height="31" Margin="380,82,0,0" VerticalAlignment="Top" Width="121"/>
+                </Grid>
             </TabItem>
             <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <ListBox Name="ListBoxAbils" HorizontalAlignment="Left" Height="271" Margin="10,10,0,0" VerticalAlignment="Top" Width="365"/>
+                </Grid>
             </TabItem>
         </TabControl>
 
