@@ -132,7 +132,7 @@ namespace Lab1
 
         public override string ToString()
         {
-            return $"{Name}: {Max}/{Health}| Abilities:";
+            return $"{Name}: {Health}/{Mana}| Abilities:";
         }
     }
 

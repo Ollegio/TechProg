@@ -2,59 +2,60 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Lab3
+namespace Lab4
 {
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create director and builders
             BasicUnitConstructor director = new BasicUnitConstructor();
+            Builder footmanBuilder = new FootmanBuilder();
+            Builder dragonBuilder = new DragonBuilder();
 
-            Builder b1 = new FootmanBuilder();
-            Builder b2 = new MageBuilder();
+            director.Construct(footmanBuilder);
+            UnitImplStrategy footman = footmanBuilder.GetUnit();
+            footman.Show();
+           
 
-            // Construct two products
-            director.Construct(b1);
-            Unit p1 = b1.GetUnit();
-            p1.Show();
+            director.Construct(dragonBuilder);
+            UnitImplStrategy dragon = dragonBuilder.GetUnit();
+            dragon.Show();
 
-            director.Construct(b2);
-            Unit p2 = b2.GetUnit();
-            p2.Show();
-
-            // Wait for user
-            Console.Read();
+            Console.WriteLine();
+            footman.Move();
+            dragon.Move();
+            Console.WriteLine("Footman gets magic item : boots of speed");
+            footman.SetMoveStrategy(new FastGroundUnit());
+            footman.Move();
         }
     }
 
-    // "Director"
     public class BasicUnitConstructor
     {
-        // Builder uses a complex series of steps
         public void Construct(Builder builder)
         {
             builder.InitUnitType();
             builder.InitCharacteristics();
             builder.InitAttack();
             builder.InitAbilities();
+            builder.InitMoveStrategy();
         }
     }
 
-    // "Builder"
     public abstract class Builder
     {
-        protected readonly Unit _unit = new Unit();
+        protected readonly UnitImplStrategy _unit = new UnitImplStrategy();
 
-        public virtual void InitUnitType() { }
-        public virtual void InitCharacteristics() { }
-        public virtual void InitAttack() { }
-        public virtual void InitAbilities() { }
-        public abstract Unit GetUnit();
+        public abstract void InitUnitType();
+        public abstract void InitCharacteristics();
+        public abstract void InitAttack();
+        public abstract void InitAbilities();
+        public abstract void InitMoveStrategy();
+        public abstract UnitImplStrategy GetUnit();
     }
 
-    // "ConcreteBuilder1"
     public class FootmanBuilder : Builder
     {
         public override void InitUnitType()
@@ -83,48 +84,15 @@ namespace Lab3
             _unit.AddAbility("shield bash");
         }
 
-        public override Unit GetUnit()
+        public override void InitMoveStrategy()
+        {
+            _unit.MoveStrategy = new GroundUnit();
+        }
+
+        public override UnitImplStrategy GetUnit()
         {
             return _unit;
         }
-       
-    }
-
-    // "ConcreteBuilder2"
-    public class MageBuilder : Builder
-    {
-        public override void InitUnitType()
-        {
-            _unit.Name = "mage";
-        }
-
-        public override void InitCharacteristics()
-        {
-            _unit.InitCharacteristics(
-                health: 200,
-                mana: 200,
-                armor: 2,
-                cost: 250,
-                food: 3);
-        }
-
-        public override void InitAttack()
-        {
-            _unit.AddAbility("attack");
-            _unit.Damage = 10;
-        }
-
-        public override void InitAbilities()
-        {
-            _unit.AddAbility("fireball");
-            _unit.AddAbility("firestorm");
-        }
-
-        public override Unit GetUnit()
-        {
-            return _unit;
-        }
-
     }
 
     public class DragonBuilder : Builder
@@ -155,16 +123,61 @@ namespace Lab3
             _unit.AddAbility("fireball");
         }
 
-        public override Unit GetUnit()
+        public override void InitMoveStrategy()
+        {
+            _unit.MoveStrategy = new FlyingUnit();
+        }
+
+        public override UnitImplStrategy GetUnit()
         {
             return _unit;
         }
 
     }
 
-    // "Product"
-    public class Unit
+    public interface IMoveStrategy
     {
+        void Move(UnitImplStrategy unit);
+    }
+
+    public class FastGroundUnit : IMoveStrategy
+    {
+        public void Move(UnitImplStrategy unit)
+        {
+            Console.WriteLine($"{unit.Name} walks faster");
+        }
+    }
+
+    public class GroundUnit : IMoveStrategy
+    {
+        public void Move(UnitImplStrategy unit)
+        {
+            Console.WriteLine($"{unit.Name} walks");
+        }
+    }
+
+    public class FlyingUnit : IMoveStrategy
+    {
+        public void Move(UnitImplStrategy unit)
+        {
+            Console.WriteLine($"{unit.Name} flies");
+        }
+    }
+
+    public class UnitImplStrategy
+    {
+        public IMoveStrategy MoveStrategy { get; set; }
+
+        public void SetMoveStrategy(IMoveStrategy moveStrategy)
+        {
+            MoveStrategy = moveStrategy;
+        }
+
+        public void Move()
+        {
+            MoveStrategy.Move(this);
+        }
+
         private readonly List<string> _abilities = new List<string>();
 
         public int MaxHealth { get; private set; }
@@ -203,8 +216,5 @@ namespace Lab3
                 Console.WriteLine(ability);
         }
 
-        public Unit()
-        {
-        }
     }
 }
