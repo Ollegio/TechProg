@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Lab3
 {
@@ -9,13 +7,13 @@ namespace Lab3
     {
         public static void Main()
         {
-            // Create director and builders
+            
             BasicUnitConstructor director = new BasicUnitConstructor();
 
             Builder b1 = new FootmanBuilder();
             Builder b2 = new MageBuilder();
 
-            // Construct two products
+            
             director.Construct(b1);
             Unit p1 = b1.GetUnit();
             p1.Show();
@@ -24,15 +22,14 @@ namespace Lab3
             Unit p2 = b2.GetUnit();
             p2.Show();
 
-            // Wait for user
+            
             Console.Read();
         }
     }
 
-    // "Director"
     public class BasicUnitConstructor
     {
-        // Builder uses a complex series of steps
+        
         public void Construct(Builder builder)
         {
             builder.InitUnitType();
@@ -41,8 +38,7 @@ namespace Lab3
             builder.InitAbilities();
         }
     }
-
-    // "Builder"
+    
     public abstract class Builder
     {
         protected readonly Unit _unit = new Unit();
@@ -54,7 +50,7 @@ namespace Lab3
         public abstract Unit GetUnit();
     }
 
-    // "ConcreteBuilder1"
+    
     public class FootmanBuilder : Builder
     {
         public override void InitUnitType()
@@ -90,7 +86,7 @@ namespace Lab3
        
     }
 
-    // "ConcreteBuilder2"
+    
     public class MageBuilder : Builder
     {
         public override void InitUnitType()
@@ -162,7 +158,7 @@ namespace Lab3
 
     }
 
-    // "Product"
+    
     public class Unit
     {
         private readonly List<string> _abilities = new List<string>();
@@ -201,10 +197,6 @@ namespace Lab3
             Console.WriteLine("Abilities:");
             foreach (string ability in _abilities)
                 Console.WriteLine(ability);
-        }
-
-        public Unit()
-        {
         }
     }
 }

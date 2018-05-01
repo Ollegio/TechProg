@@ -10,25 +10,25 @@ namespace Lab4
     {
         static void Main(string[] args)
         {
-            BasicUnitConstructor director = new BasicUnitConstructor();
+            BasicUnitConstructor unitConstructor = new BasicUnitConstructor();
             Builder footmanBuilder = new FootmanBuilder();
             Builder dragonBuilder = new DragonBuilder();
 
-            director.Construct(footmanBuilder);
+            unitConstructor.Construct(footmanBuilder);
             UnitImplStrategy footman = footmanBuilder.GetUnit();
-            footman.Show();
-           
+            Console.WriteLine(footman);
 
-            director.Construct(dragonBuilder);
+            unitConstructor.Construct(dragonBuilder);
             UnitImplStrategy dragon = dragonBuilder.GetUnit();
-            dragon.Show();
-
+            Console.WriteLine(dragon);
+            
             Console.WriteLine();
             footman.Move();
             dragon.Move();
             Console.WriteLine("Footman gets magic item : boots of speed");
             footman.SetMoveStrategy(new FastGroundUnit());
             footman.Move();
+            Console.ReadKey();
         }
     }
 
@@ -46,7 +46,7 @@ namespace Lab4
 
     public abstract class Builder
     {
-        protected readonly UnitImplStrategy _unit = new UnitImplStrategy();
+        protected UnitImplStrategy Unit { get; } = new UnitImplStrategy();
 
         public abstract void InitUnitType();
         public abstract void InitCharacteristics();
@@ -60,12 +60,12 @@ namespace Lab4
     {
         public override void InitUnitType()
         {
-            _unit.Name = "footman";
+            Unit.Name = "footman";
         }
 
         public override void InitCharacteristics()
         {
-            _unit.InitCharacteristics(
+            Unit.InitCharacteristics(
                 health: 400,
                 mana: 0,
                 armor: 5,
@@ -75,23 +75,23 @@ namespace Lab4
 
         public override void InitAttack()
         {
-            _unit.AddAbility("attack");
-            _unit.Damage = 15;
+            Unit.AddAbility("attack");
+            Unit.Damage = 15;
         }
 
         public override void InitAbilities()
         {
-            _unit.AddAbility("shield bash");
+            Unit.AddAbility("shield bash");
         }
 
         public override void InitMoveStrategy()
         {
-            _unit.MoveStrategy = new GroundUnit();
+            Unit.MoveStrategy = new GroundUnit();
         }
 
         public override UnitImplStrategy GetUnit()
         {
-            return _unit;
+            return Unit;
         }
     }
 
@@ -99,12 +99,12 @@ namespace Lab4
     {
         public override void InitUnitType()
         {
-            _unit.Name = "dragon";
+            Unit.Name = "dragon";
         }
 
         public override void InitCharacteristics()
         {
-            _unit.InitCharacteristics(
+            Unit.InitCharacteristics(
                 health: 1400,
                 mana: 400,
                 armor: 12,
@@ -114,23 +114,23 @@ namespace Lab4
 
         public override void InitAttack()
         {
-            _unit.AddAbility("attack");
-            _unit.Damage = 65;
+            Unit.AddAbility("attack");
+            Unit.Damage = 65;
         }
 
         public override void InitAbilities()
         {
-            _unit.AddAbility("fireball");
+            Unit.AddAbility("fireball");
         }
 
         public override void InitMoveStrategy()
         {
-            _unit.MoveStrategy = new FlyingUnit();
+            Unit.MoveStrategy = new FlyingUnit();
         }
 
         public override UnitImplStrategy GetUnit()
         {
-            return _unit;
+            return Unit;
         }
 
     }
@@ -178,8 +178,6 @@ namespace Lab4
             MoveStrategy.Move(this);
         }
 
-        private readonly List<string> _abilities = new List<string>();
-
         public int MaxHealth { get; private set; }
         public int MaxMana { get; private set; }
         public int Damage { get; set; }
@@ -189,6 +187,8 @@ namespace Lab4
         public string Name { get; set; }
         public int Health { get; set; }
         public int Mana { get; set; }
+
+        public List<string> Abilities { get; } = new List<string>();
 
         public void InitCharacteristics(int health, int mana, int armor, int cost, int food)
         {
@@ -203,18 +203,19 @@ namespace Lab4
 
         public void AddAbility(string ability)
         {
-            _abilities.Add(ability);
+            Abilities.Add(ability);
         }
 
-        public void Show()
+        public override string ToString()
         {
-            Console.WriteLine("\nUnit type: " + Name);
-            Console.WriteLine("Health: {0}/{1}", Health, MaxHealth);
-            Console.WriteLine("Mana: {0}/{1}", Mana, MaxMana);
-            Console.WriteLine("Abilities:");
-            foreach (string ability in _abilities)
-                Console.WriteLine(ability);
+            var res = new StringBuilder();
+            res.Append($"\nUnit type: {Name}\n");
+            res.Append($"Health: {Health}/{MaxHealth}\n");
+            res.Append($"Mana: {Mana}/{MaxMana}\n");
+            res.Append("Abilities: ");
+            foreach (var ability in Abilities)
+                res.Append(ability + " ");
+            return res.ToString();
         }
-
     }
 }
